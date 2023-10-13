@@ -1,21 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_builder/responsive_builder.dart';
 
 import '../../widgets/widgets.dart';
 import '../auth.dart';
 
-class SignInForm extends StatefulWidget {
-  const SignInForm({super.key});
+class RegisterForm extends StatefulWidget {
+  const RegisterForm({super.key});
 
   @override
-  State<SignInForm> createState() => _SignInFormState();
+  State<RegisterForm> createState() => _RegisterFormState();
 }
 
-class _SignInFormState extends State<SignInForm> {
-  final _formKey = GlobalKey<FormState>();
+class _RegisterFormState extends State<RegisterForm> {
+  final _formKey = GlobalKey<FormState>(debugLabel: 'registerForm');
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  final _phoneController = TextEditingController();
 
   @override
   void initState() {
@@ -37,6 +39,24 @@ class _SignInFormState extends State<SignInForm> {
             validator: (p0) {
               if (p0 == null || p0.isEmpty) {
                 return 'Email is required';
+              } else if (!_isValidEmail(p0)) {
+                return 'Invalid email format';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 16.0),
+          MyInput(
+            controller: _phoneController,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly,
+            ],
+            label: 'Phone',
+            validator: (p0) {
+              if (p0 == null || p0.isEmpty) {
+                return 'Phone is required';
+              } else if (p0.length < 8) {
+                return 'Phone must be at least 8 characters long';
               }
               return null;
             },
@@ -53,6 +73,8 @@ class _SignInFormState extends State<SignInForm> {
             validator: (p0) {
               if (p0 == null || p0.isEmpty) {
                 return 'Password is required';
+              } else if (p0.length < 8) {
+                return 'Password must be at least 8 characters long';
               }
               return null;
             },
@@ -65,9 +87,10 @@ class _SignInFormState extends State<SignInForm> {
             onPressed: () async {
               if (_formKey.currentState!.validate()) {
                 try {
-                  await context.read<AuthController>().signinWithEmail(
-                        _emailController.text,
-                        _passwordController.text,
+                  await context.read<AuthController>().createUser(
+                        name: '+976${_phoneController.text}',
+                        email: _emailController.text,
+                        password: _passwordController.text,
                       );
                 } on Exception catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -82,5 +105,12 @@ class _SignInFormState extends State<SignInForm> {
         ],
       ),
     );
+  }
+
+  bool _isValidEmail(String email) {
+    // Regular expression pattern for email validation
+    const pattern = r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$';
+    final regExp = RegExp(pattern);
+    return regExp.hasMatch(email);
   }
 }

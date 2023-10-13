@@ -1,9 +1,9 @@
-import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_app/game/snake_game.dart';
+import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:mini_app/utils/utils.dart';
 import 'package:provider/provider.dart';
 
+import 'app.dart';
 import 'auth/auth.dart';
 
 /// Global instance of GetIt
@@ -12,6 +12,7 @@ final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  usePathUrlStrategy();
 
   // Configure the application
   try {
@@ -41,9 +42,7 @@ void main() async {
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home: const Center(
-          child: Text('ss'),
-        ),
+        home: const MyApp(),
       ),
     ),
   );
