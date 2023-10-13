@@ -1,4 +1,3 @@
-import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:mini_app/game/component/world.dart';
@@ -10,6 +9,7 @@ import 'snake/offsets.dart';
 
 class SnakeGame extends FlameGame with TapDetector {
   Grid grid = Grid(GameConfig.rows, GameConfig.columns, GameConfig.cellSize);
+  // ignore: non_constant_identifier_names
   WorldView? world_view;
   OffSets offSets = OffSets(Vector2.zero());
 

@@ -2,6 +2,8 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:mini_app/game/config/game_config.dart';
 import 'package:mini_app/game/config/styles.dart';
 import 'package:mini_app/game/snake/command_queue.dart';

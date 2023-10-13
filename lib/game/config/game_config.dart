@@ -1,7 +1,6 @@
 import 'package:flame/components.dart';
 
 class GameConfig {
-
   // Defines the number of rows in the grid
   static const rows = 24;
 
@@ -12,7 +11,7 @@ class GameConfig {
   static const cellSize = 32;
 
   // Initial snake length
-  static const initialSnakeLength = 3;
+  static const initialSnakeLength = 1;
 
   // Initial snake's head index
   static final headIndex = Vector2(initialSnakeLength.toDouble(), 20);

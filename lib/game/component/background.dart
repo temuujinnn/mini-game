@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:mini_app/game/config/styles.dart';
 import 'package:mini_app/game/snake_game.dart';
 
