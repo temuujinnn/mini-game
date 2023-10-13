@@ -4,6 +4,7 @@ import 'package:responsive_builder/responsive_builder.dart';
 
 import '../../widgets/uis/uis.dart';
 import '../auth.dart';
+import '../widgets/register_form.dart';
 import '../widgets/widgets.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -14,6 +15,14 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  bool isRegister = false;
+
+  switchForm() {
+    setState(() {
+      isRegister = !isRegister;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,8 +49,16 @@ class _SignInScreenState extends State<SignInScreen> {
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  MyTitle(title: 'There is no rule on write code!'),
-                  SignInForm(),
+                  isRegister ? const RegisterForm() : const SignInForm(),
+                  isRegister
+                      ? TextButton(
+                          onPressed: switchForm,
+                          child: const Text('Already have an account? Sign in'),
+                        )
+                      : TextButton(
+                          onPressed: switchForm,
+                          child: const Text('Create an account'),
+                        ),
                 ],
               ),
             ),

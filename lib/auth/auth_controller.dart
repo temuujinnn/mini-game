@@ -29,8 +29,6 @@ class AuthController extends ChangeNotifier {
       _currentUser = user;
     } catch (e) {
       _status = AuthStatus.unauthenticated;
-      // get<Logger>().e('Error getting user in AuthContoller: $e');
-      // showMySnackBar('Error getting user in AuthContoller: $e');
     } finally {
       notifyListeners();
     }
@@ -52,7 +50,6 @@ class AuthController extends ChangeNotifier {
       );
       return user;
     } catch (e) {
-      showMySnackBar('Error Creating user in AuthContoller: $e');
       print(e);
       rethrow;
     } finally {
@@ -66,7 +63,7 @@ class AuthController extends ChangeNotifier {
       _status = AuthStatus.unauthenticated;
     } catch (e) {
       print(e);
-      showMySnackBar('Error signing out in AuthController: $e');
+      rethrow;
     } finally {
       notifyListeners();
     }
@@ -81,8 +78,8 @@ class AuthController extends ChangeNotifier {
       _status = AuthStatus.authenticated;
     } catch (e) {
       print(e);
-      showMySnackBar('Error signing in with email in AuthController: $e');
       _status = AuthStatus.unauthenticated;
+      rethrow;
     } finally {
       notifyListeners();
     }
