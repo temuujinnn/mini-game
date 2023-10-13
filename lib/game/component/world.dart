@@ -37,6 +37,8 @@ class WorldView extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
           gameOver = true;
         } else {
           if (nextCell.cellType == CellType.food) {
+            print('nextCell.cellType ${nextCell.cellType}');
+            print('CellType.food ${CellType.food}');
             _snake.grow(nextCell);
             _grid.generateFood();
           } else {
