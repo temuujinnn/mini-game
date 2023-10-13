@@ -2,6 +2,7 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:mini_app/game/component/world.dart';
 
+import '../repository/appwrite_repo.dart';
 import 'component/background.dart';
 import 'config/game_config.dart';
 import 'snake/grid.dart';
