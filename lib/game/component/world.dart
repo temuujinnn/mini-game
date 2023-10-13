@@ -2,8 +2,6 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/input.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:mini_app/game/config/game_config.dart';
 import 'package:mini_app/game/config/styles.dart';
 import 'package:mini_app/game/snake/command_queue.dart';
@@ -37,8 +35,6 @@ class WorldView extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
           gameOver = true;
         } else {
           if (nextCell.cellType == CellType.food) {
-            print('nextCell.cellType ${nextCell.cellType}');
-            print('CellType.food ${CellType.food}');
             _snake.grow(nextCell);
             _grid.generateFood();
           } else {

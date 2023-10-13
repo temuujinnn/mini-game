@@ -19,7 +19,7 @@ class SnakeGame extends FlameGame with TapDetector {
 
     offSets = OffSets(canvasSize);
 
-    add(BackGround(GameConfig.cellSize));
+    add(BackGround('land.png', GameConfig.cellSize));
 
     // ignore: avoid_function_literals_in_foreach_calls
     grid.cells.forEach((rows) => rows.forEach((cell) => add(cell)));

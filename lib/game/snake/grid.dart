@@ -5,7 +5,7 @@ import 'package:flame/components.dart';
 import '../component/cell.dart';
 
 class Grid {
-  static Cell border = Cell(Vector2(-1, -1), -1);
+  static Cell border = Cell(Vector2(1, 1), 1);
 
   final int _rows;
   final int _columns;
