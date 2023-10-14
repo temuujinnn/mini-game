@@ -31,18 +31,12 @@ class WorldView extends DynamicFpsPositionComponent with HasGameRef<SnakeGame> {
       var nextCell = _getNextCell();
 
       if (nextCell != Grid.border) {
-        if (_snake.checkCrash(nextCell)) {
-          gameOver = true;
+        if (nextCell.cellType == CellType.food) {
+          _snake.move(nextCell);
+          _grid.generateFood();
         } else {
-          if (nextCell.cellType == CellType.food) {
-            _snake.grow(nextCell);
-            _grid.generateFood();
-          } else {
-            _snake.move(nextCell);
-          }
+          _snake.move(nextCell);
         }
-      } else {
-        gameOver = true;
       }
     }
   }

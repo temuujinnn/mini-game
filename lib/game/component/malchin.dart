@@ -13,7 +13,7 @@ class Malchin extends TimerComponent with HasGameRef {
   void onTick() {
     game.addAll(
       List.generate(
-        1,
+        5,
         (index) => EnemyComponent(
           position: Vector2(
             60 + (game.size.x - _halfWidth) * random.nextDouble(),

@@ -19,19 +19,19 @@ class Snake {
   }
 
   void grow(Cell nextCell) {
-    head = nextCell;
-    _addFirst(head);
+    // head = nextCell;
+    // _addFirst(head);
   }
 
-  bool checkCrash(Cell nextCell) {
-    for (var part in snakeBody) {
-      if (part.cell == nextCell) {
-        return true;
-      }
-    }
+  // bool checkCrash(Cell nextCell) {
+  //   for (var part in snakeBody) {
+  //     if (part.cell == nextCell) {
+  //       return true;
+  //     }
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
   void setHead(Cell cell) {
     head = cell;

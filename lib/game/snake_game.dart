@@ -1,7 +1,8 @@
+import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:mini_app/game/component/ai.dart';
-import 'package:mini_app/game/component/explosion.dart';
+import 'package:mini_app/game/component/healthbar.dart';
 import 'package:mini_app/game/component/world.dart';
 
 import 'component/background.dart';
@@ -14,7 +15,10 @@ class SnakeGame extends FlameGame with TapDetector {
   // ignore: non_constant_identifier_names
   WorldView? world_view;
   OffSets offSets = OffSets(Vector2.zero());
-
+  late final score = 100;
+  late final second = 0;
+  late final TextComponent scoreText;
+  late final TextBoxComponent gamesecond;
   @override
   Future<void> onLoad() async {
     await super.onLoad();
@@ -30,6 +34,23 @@ class SnakeGame extends FlameGame with TapDetector {
     add(enemy);
     world_view = WorldView(grid);
     add(world_view!);
+    add(
+      scoreText = TextComponent(
+        text: 'Your score: ${score.toString()}',
+        position: size - Vector2(10, 900),
+        anchor: Anchor.topRight,
+        priority: 1,
+      ),
+    );
+    add(
+      gamesecond = TextBoxComponent(
+        text: 'Time: ${second.toString()}',
+        position: Vector2(0, 0),
+        anchor: Anchor.topLeft,
+        priority: 1,
+      ),
+    );
+
     // add(ExplosionComponent());
   }
 
