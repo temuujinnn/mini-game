@@ -11,22 +11,23 @@ class GameMap extends Component {
   static final Rectangle bounds = Rectangle.fromLTRB(-size, -size, size, size);
 
   static final Paint _paintBorder = Paint()
-    ..color = Colors.white12
+    ..color = Colors.green
     ..strokeWidth = 10
     ..style = PaintingStyle.stroke;
-  static final Paint _paintBg = Paint()..color = const Color(0xFF333333);
+  static final Paint _paintBg = Paint()..color = Colors.green;
 
   static final _rng = Random();
 
   late final List<Paint> _paintPool;
   late final List<Rect> _rectPool;
 
-  GameMap() : super(priority: 0) {
+  GameMap() : super() {
     _paintPool = List<Paint>.generate(
       (size / 50).ceil(),
       (_) => PaintExtension.random(rng: _rng)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2,
+        ..strokeWidth = 2
+        ..color = Colors.green,
       growable: false,
     );
     _rectPool = List<Rect>.generate(

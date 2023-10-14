@@ -18,6 +18,14 @@ class Sheep extends SpriteComponent with HasGameRef, TapCallbacks {
   @override
   Future<void> onLoad() async {
     sprite = await game.loadSprite('nine-box.png');
+    // animation = await game.loadSpriteAnimation(
+    //   'animations/sheep.png',
+    //   SpriteAnimationData.sequenced(
+    //     amount: 3,
+    //     textureSize: Vector2(47, 51),
+    //     stepTime: 0.15,
+    //   ),
+    // );
     paint = Paint()..color = Colors.white;
     add(RectangleHitbox());
   }

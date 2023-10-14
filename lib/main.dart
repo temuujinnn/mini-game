@@ -2,6 +2,8 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
+import 'dead_menu.dart';
+import 'main_menu.dart';
 import 'wolf_game.dart';
 
 /// Global instance of GetIt
@@ -35,9 +37,18 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GameWidget(
-      game: WolfGame(
-        viewportResolution: Vector2(600, 800),
+    return GameWidget.controlled(
+      gameFactory: () => WolfGame(
+        // phone default size is 360x640
+        viewportResolution: Vector2(1080, 1920),
+      ),
+      overlayBuilderMap: {
+        'MainMenu': (_, WolfGame game) => MainMenu(game: game),
+        'GameOver': (_, WolfGame game) => GameOver(game: game),
+      },
+      initialActiveOverlays: const ['MainMenu'],
+      loadingBuilder: (_) => const Center(
+        child: Text('Loading'),
       ),
     );
   }

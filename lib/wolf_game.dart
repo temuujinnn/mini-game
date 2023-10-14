@@ -1,24 +1,18 @@
-import 'dart:math';
 import 'dart:ui';
 
-import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
-import 'package:flame/experimental.dart';
 import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart' hide Image;
-import 'package:flutter/services.dart';
 import 'package:mini_app/game_map.dart';
 import 'package:mini_app/movable_wolf.dart';
 import 'package:mini_app/sheep.dart';
-import './commons/ember.dart';
 
-import 'game_panel.dart';
+import 'dead_menu.dart';
 
 enum GameState { playing, intro, gameOver }
 
@@ -36,28 +30,31 @@ class WolfGame extends FlameGame
   WolfGame({required this.viewportResolution})
       : super(
           camera: CameraComponent.withFixedResolution(
-            width: viewportResolution.x,
-            height: viewportResolution.y,
+            width: viewportResolution.x / 2,
+            height: viewportResolution.y / 2,
           ),
         );
 
   // late final Image spriteImage;
 
-  late MovableEmber ember;
+  late MovableWolf player;
   final Vector2 viewportResolution;
   late JoystickComponent joystick;
 
-  late final Image spriteImage;
-
-  late final gameOverPanel = GameOverPanel();
   late final TextComponent scoreText;
 
+  int _health = 100;
+  int get health => _health;
+  set health(int newHealth) {
+    _health = newHealth;
+    scoreText.text = 'HEALTH: ${scoreString(_health)}';
+  }
+
   int _score = 0;
-  int _highscore = 0;
   int get score => _score;
   set score(int newScore) {
     _score = newScore;
-    scoreText.text = '${scoreString(_score)}  HI ${scoreString(_highscore)}';
+    scoreText.text = 'SCORE: ${scoreString(_score)}';
   }
 
   String scoreString(int score) => score.toString().padLeft(5, '0');
@@ -67,30 +64,6 @@ class WolfGame extends FlameGame
 
   @override
   Future<void> onLoad() async {
-    spriteImage = await Flame.images.load('wolf.png');
-    const chars = '0123456789HI ';
-    final renderer = SpriteFontRenderer.fromFont(
-      SpriteFont(
-        source: spriteImage,
-        size: 23,
-        ascent: 23,
-        glyphs: [
-          for (var i = 0; i < chars.length; i++)
-            Glyph(chars[i], left: 954.0 + 20 * i, top: 0, width: 20),
-        ],
-      ),
-      letterSpacing: 2,
-    );
-    add(
-      scoreText = TextComponent(
-        position: Vector2(20, 20),
-        textRenderer: renderer,
-      ),
-    );
-    score = 0;
-    world.add(GameMap());
-    add(gameOverPanel);
-
     /// Joystick
     final knobPaint = BasicPalette.blue.withAlpha(200).paint();
     final backgroundPaint = BasicPalette.blue.withAlpha(100).paint();
@@ -100,14 +73,18 @@ class WolfGame extends FlameGame
       margin: const EdgeInsets.only(left: 40, bottom: 40),
     );
 
-    world.add(ember = MovableEmber(joystick));
-    camera.setBounds(GameMap.bounds);
-    camera.follow(ember, maxSpeed: 250);
-
-    world.addAll(
-      List.generate(30, (_) => Sheep(GameMap.generateCoordinates())),
+    scoreText = TextComponent(
+      textRenderer: TextPaint(
+        style: const TextStyle(
+          color: Colors.white70,
+          fontSize: 30,
+          fontFamily: 'PressStart2P',
+        ),
+      ),
     );
-    camera.viewport.add(joystick);
+    scoreText.text = 'SCORE: 00000';
+
+    add(scoreText);
   }
 
   @override
@@ -120,7 +97,7 @@ class WolfGame extends FlameGame
     if (isPlaying) {
       timePlaying += dt;
       _distanceTraveled += dt * currentSpeed;
-      score = _distanceTraveled ~/ 50;
+      // score = _distanceTraveled ~/ 50;
 
       if (currentSpeed < maxSpeed) {
         currentSpeed += acceleration * dt;
@@ -150,26 +127,29 @@ class WolfGame extends FlameGame
       restart();
       return;
     }
-    // player.jump(currentSpeed);
+    player.jump(currentSpeed);
   }
 
   void gameOver() {
-    gameOverPanel.visible = true;
     state = GameState.gameOver;
-    // player.current = PlayerState.crashed;
+    player.current = PlayerState.crashed;
     currentSpeed = 0.0;
   }
 
   void restart() {
+    world.add(GameMap());
+    world.addAll(
+      List.generate(30, (_) => Sheep(GameMap.generateCoordinates())),
+    );
+    world.add(player = MovableWolf(joystick));
+    camera.follow(player, maxSpeed: 300);
+    camera.setBounds(GameMap.bounds);
+    camera.viewport.add(scoreText);
+    camera.viewport.add(joystick);
     state = GameState.playing;
-    // player.reset();
-    // horizon.reset();
+    player.reset();
     currentSpeed = startSpeed;
-    gameOverPanel.visible = false;
     timePlaying = 0.0;
-    if (score > _highscore) {
-      _highscore = score;
-    }
     score = 0;
     _distanceTraveled = 0;
   }

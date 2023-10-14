@@ -9,12 +9,13 @@ import 'commons/ember.dart';
 
 import 'wolf_game.dart';
 
-class MovableEmber extends Ember<WolfGame>
+enum PlayerState { crashed, jumping, running, waiting }
+
+class MovableWolf extends Ember<WolfGame>
     with CollisionCallbacks, KeyboardHandler {
   final JoystickComponent joystick;
-  int health = 100;
 
-  MovableEmber(this.joystick)
+  MovableWolf(this.joystick)
       : super(
           size: Vector2.all(100.0),
         );
@@ -28,6 +29,7 @@ class MovableEmber extends Ember<WolfGame>
   late final TextComponent positionText;
   late final maxPosition = Vector2.all(GameMap.size - size.x / 2);
   late final minPosition = -maxPosition;
+  late PlayerState current;
 
   @override
   Future<void> onLoad() async {
@@ -40,6 +42,22 @@ class MovableEmber extends Ember<WolfGame>
     );
     add(positionText);
     add(CircleHitbox());
+    current = PlayerState.waiting;
+  }
+
+  void jump(double speed) {
+    if (current == PlayerState.jumping) {
+      return;
+    }
+
+    current = PlayerState.jumping;
+    // _jumpVelocity = initialJumpVelocity - (speed / 500);
+  }
+
+  void reset() {
+    // y = groundYPos;
+    // _jumpVelocity = 0.0;
+    current = PlayerState.running;
   }
 
   @override
@@ -55,6 +73,7 @@ class MovableEmber extends Ember<WolfGame>
       // angle = joystick.delta.screenAngle();
     }
     final deltaPosition = velocity * (speed * dt);
+    game.timePlaying += deltaPosition.length;
     position.add(deltaPosition);
     position.clamp(minPosition, maxPosition);
     positionText.text = '(${x.toInt()}, ${y.toInt()})';
@@ -77,6 +96,7 @@ class MovableEmber extends Ember<WolfGame>
           ),
         ),
       );
+      game.score = game.score + 100;
       other.add(TextComponent(
         text: '100',
         textRenderer: textRenderer,
