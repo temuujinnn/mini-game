@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 import 'package:flame/extensions.dart';
-import 'package:mini_app/game/config/styles.dart';
 import 'package:mini_app/game/snake_game.dart';
 
 class BackGround extends PositionComponent with HasGameRef<SnakeGame> {

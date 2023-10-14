@@ -1,5 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
+import 'package:mini_app/game/component/ai.dart';
+import 'package:mini_app/game/component/explosion.dart';
 import 'package:mini_app/game/component/world.dart';
 
 import 'component/background.dart';
@@ -24,9 +26,11 @@ class SnakeGame extends FlameGame with TapDetector {
     // ignore: avoid_function_literals_in_foreach_calls
     grid.cells.forEach((rows) => rows.forEach((cell) => add(cell)));
     grid.generateFood();
-
+    final enemy = EnemyComponent(position: Vector2(100, 160));
+    add(enemy);
     world_view = WorldView(grid);
     add(world_view!);
+    // add(ExplosionComponent());
   }
 
   @override
