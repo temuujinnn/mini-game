@@ -2,7 +2,7 @@ import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 
-import 'follow_camera.dart';
+import 'wolf_game.dart';
 
 /// Global instance of GetIt
 final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
@@ -36,8 +36,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GameWidget(
-      game: FollowComponentExample(
-        viewportResolution: Vector2(500, 500),
+      game: WolfGame(
+        viewportResolution: Vector2(600, 800),
       ),
     );
   }
