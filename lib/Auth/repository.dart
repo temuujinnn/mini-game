@@ -64,8 +64,8 @@ Future<void> chargeGame() async {
 
 Future<void> sendScoreData(score) async {
   final url = Uri.parse('http://18.184.93.1:4050/api/scoreboard/');
-  final token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTJhMjNhZjRmYzA4M2I5M2I4NGJhMzMiLCJwaG9uZU5vIjo5OTExMDA0NSwiaWF0IjoxNjk3MjYxOTU2LCJleHAiOjE2OTc4NjY3NTZ9.P4e7El1213JphGpvx8Bap5BqhMxM01LLUHttpnPyipw';
+  final token = await AuthService.getAccessToken();
+  print(token);
 
   final headers = {
     'accept': 'application/json',

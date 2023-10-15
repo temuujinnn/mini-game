@@ -1,29 +1,41 @@
 import 'dart:convert';
+import 'package:get/get.dart';
+import 'package:get/get_state_manager/src/simple/get_controllers.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthStatus { loading, authenticated, unauthenticated }
 
-class AuthService {
-  static Future<void> saveAccessToken(String accessToken) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString('accessToken', accessToken);
-  }
-
-  static Future<String?> getAccessToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('accessToken');
-  }
-
-  static Future<void> clearAccessToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('accessToken');
-  }
-}
-
-class AuthController {
+class AuthController extends GetxController {
   AuthStatus _status = AuthStatus.loading;
+  final phoneNumber = ''.obs;
   AuthStatus get status => _status;
+  Future<void> loadUser() async {
+    print('object ${_status}');
+
+    await AuthService.getAccessToken().then((value) {
+      print('value: $value');
+      if (value != null) {
+        _status = AuthStatus.authenticated;
+      } else if (value == null) {
+        _status = AuthStatus.unauthenticated;
+      }
+    }).catchError((e) {
+      _status = AuthStatus.unauthenticated;
+    });
+    await AuthService.getPhoneNumber().then((value) {
+      print('values: $value');
+      if (value != null) {
+        phoneNumber.value = value;
+      } else if (value == null) {
+        _status = AuthStatus.unauthenticated;
+      }
+    }).catchError((e) {
+      print(e);
+      _status = AuthStatus.unauthenticated;
+      print('Logged out');
+    });
+  }
 
   Future<void> loginPhoneNumber(String phoneNumber) async {
     final url = Uri.parse('http://18.184.93.1:4050/api/auth/login');
@@ -47,8 +59,11 @@ class AuthController {
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(response.body);
         final accessToken = jsonResponse["accessToken"];
+        final phoneNumber = jsonResponse['phoneNo'].toString();
+        print(phoneNumber);
         _status = AuthStatus.authenticated;
         AuthService.saveAccessToken(accessToken);
+        AuthService.savePhoneNumber(phoneNumber);
 
         // Successful response, you can handle it here
         print("Login successful");
@@ -69,24 +84,31 @@ class AuthController {
     await AuthService.clearAccessToken();
     _status = AuthStatus.unauthenticated;
   }
+}
 
-  Future<void> loadUser() async {
-    print('object');
+class AuthService {
+  static Future<void> saveAccessToken(String accessToken) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('accessToken', accessToken);
+  }
 
-    await AuthService.getAccessToken().then((value) {
-      print('value: $value');
-      if (value != null) {
-        print('value: $value');
-        _status = AuthStatus.authenticated;
-        print(_status);
-        print("Logged in");
-      } else {
-        _status = AuthStatus.unauthenticated;
-      }
-    }).catchError((e) {
-      print(e);
-      _status = AuthStatus.unauthenticated;
-      print('Logged out');
-    });
+  static Future<void> savePhoneNumber(String phoneNumber) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('phoneNumber', phoneNumber);
+  }
+
+  static Future<String?> getPhoneNumber() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('phoneNumber');
+  }
+
+  static Future<String?> getAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString('accessToken');
+  }
+
+  static Future<void> clearAccessToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('accessToken');
   }
 }

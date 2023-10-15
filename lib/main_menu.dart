@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:mini_app/Auth/auth_controller.dart';
 import 'package:mini_app/Auth/repository.dart';
 import 'package:mini_app/wolf_game.dart';
@@ -8,7 +9,7 @@ class MainMenu extends StatelessWidget {
   final WolfGame game;
 
   MainMenu({super.key, required this.game});
-  final authController = AuthController();
+  final authController = Get.put(AuthController());
   final TextEditingController phoneNumberController =
       TextEditingController(text: '99110041');
 
@@ -17,6 +18,8 @@ class MainMenu extends StatelessWidget {
     // const blackTextColor = Color.fromRGBO(0, 0, 0, 1.0);
     const whiteTextColor = Color.fromRGBO(255, 255, 255, 1.0);
     authController.loadUser();
+    print(authController.status);
+    print(authController.phoneNumber);
     return Material(
       color: Colors.black,
       child: Scaffold(
@@ -47,6 +50,9 @@ class MainMenu extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Obx(
+                      () => Text('${authController.phoneNumber.value}'),
+                    ),
                     ElevatedButton(
                       onPressed: () async {
                         if (authController.status == AuthStatus.authenticated) {
@@ -94,14 +100,15 @@ class MainMenu extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
-                    if (authController.status != AuthStatus.authenticated)
+                    if (authController.status != AuthStatus.authenticated &&
+                        authController.status == AuthStatus.loading)
                       ElevatedButton(
                         onPressed: () async {
-                          // authController.logout();
+                          authController.logout();
                           try {
                             // await chargeGame();
                             // _showSnackbar(context);
-                            sendScoreData(1001);
+                            // sendScoreDPata(10033);
                           } catch (e) {}
                         },
                         style: ElevatedButton.styleFrom(
