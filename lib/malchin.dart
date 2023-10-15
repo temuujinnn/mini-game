@@ -28,7 +28,7 @@ class Malchin extends SpriteAnimationComponent with HasGameRef, TapCallbacks {
       ),
     );
     paint = Paint()..color = Colors.black;
-    add(RectangleHitbox());
+    add(RectangleHitbox(collisionType: CollisionType.passive));
   }
 
   @override

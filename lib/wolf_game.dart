@@ -10,6 +10,7 @@ import 'package:mini_app/hud.dart';
 import 'package:mini_app/movable_wolf.dart';
 import 'package:mini_app/sheep.dart';
 
+import 'Auth/repository.dart';
 import 'malchin.dart';
 
 enum GameState { playing, intro, gameOver }
@@ -40,6 +41,8 @@ class WolfGame extends FlameGame
   late JoystickComponent joystick;
 
   double _health = 100;
+  List<Sheep> sheep = [];
+  List<Malchin> malchin = [];
   double get health => _health;
   set health(double newHealth) {
     _health = newHealth;
@@ -128,14 +131,13 @@ class WolfGame extends FlameGame
     overlays.add('GameOver');
   }
 
-  void restart() {
+  void restart() async {
+    await chargeGame('99110041');
     world.add(GameMap());
-    world.addAll(
-      List.generate(30, (_) => Sheep(GameMap.generateCoordinates())),
-    );
-    world.addAll(
-      List.generate(30, (_) => Malchin(GameMap.generateCoordinates())),
-    );
+    sheep = List.generate(30, (_) => Sheep(GameMap.generateCoordinates()));
+    malchin = List.generate(30, (_) => Malchin(GameMap.generateCoordinates()));
+    world.addAll(sheep);
+    world.addAll(malchin);
     world.add(player = MovableWolf(joystick));
     camera.follow(player, maxSpeed: 300);
     camera.setBounds(GameMap.bounds);

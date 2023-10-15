@@ -8,6 +8,7 @@ import 'package:mini_app/sheep.dart';
 import 'commons/ember.dart';
 
 import 'malchin.dart';
+import 'shake_effect.dart';
 import 'wolf_game.dart';
 
 enum PlayerState { crashed, jumping, running, waiting }
@@ -38,7 +39,7 @@ class MovableWolf extends Ember<WolfGame>
         ]),
   );
   final Vector2 velocity = Vector2.zero();
-  late final TextComponent positionText;
+
   late final maxPosition = Vector2.all(GameMap.size - size.x / 2);
   late final minPosition = -maxPosition;
   late PlayerState current;
@@ -47,12 +48,6 @@ class MovableWolf extends Ember<WolfGame>
   Future<void> onLoad() async {
     await super.onLoad();
 
-    positionText = TextComponent(
-      textRenderer: textRenderer,
-      position: (size / 2)..y = size.y / 2 + 30,
-      anchor: Anchor.center,
-    );
-    add(positionText);
     add(CircleHitbox());
     current = PlayerState.waiting;
   }
@@ -88,7 +83,6 @@ class MovableWolf extends Ember<WolfGame>
     game.timePlaying += deltaPosition.length;
     position.add(deltaPosition);
     position.clamp(minPosition, maxPosition);
-    positionText.text = '(${x.toInt()}, ${y.toInt()})';
   }
 
   @override
@@ -122,6 +116,12 @@ class MovableWolf extends Ember<WolfGame>
     }
     if (other is Malchin) {
       game.health = game.health - 30;
+      game.camera.viewfinder.add(
+        MoveEffect.by(
+          Vector2(25, 25),
+          PerlinNoiseEffectController(duration: 0.3, frequency: 500),
+        ),
+      );
       // make it white and red
     }
   }
