@@ -42,12 +42,13 @@ class WolfGame extends FlameGame
   late JoystickComponent joystick;
 
   late final TextComponent scoreText;
+  // late final TextComponent healthText;
 
   int _health = 100;
   int get health => _health;
   set health(int newHealth) {
     _health = newHealth;
-    scoreText.text = 'HEALTH: ${scoreString(_health)}';
+    // healthText.text = 'HEALTH: ${scoreString(_health)}';
   }
 
   int _score = 0;
@@ -95,12 +96,16 @@ class WolfGame extends FlameGame
     }
 
     if (isPlaying) {
+      // health = health - 1;
       timePlaying += dt;
       _distanceTraveled += dt * currentSpeed;
       // score = _distanceTraveled ~/ 50;
 
       if (currentSpeed < maxSpeed) {
         currentSpeed += acceleration * dt;
+      }
+      if (health <= 0) {
+        gameOver();
       }
     }
   }
@@ -131,7 +136,9 @@ class WolfGame extends FlameGame
   }
 
   void gameOver() {
+    print('game over');
     state = GameState.gameOver;
+
     player.current = PlayerState.crashed;
     currentSpeed = 0.0;
   }
