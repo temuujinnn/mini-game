@@ -143,11 +143,11 @@ class MovableWolf extends Ember<WolfGame>
       game.health = game.health - 10;
       game.camera.viewfinder.add(
         MoveEffect.by(
-          Vector2(10, 10),
+          Vector2(30, 30),
           PerlinNoiseEffectController(duration: 0.3, frequency: 500),
         ),
       );
-
+      other.add(RemoveEffect());
       // make it white and red
     }
   }
