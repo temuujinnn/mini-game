@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mini_app/Auth/auth_controller.dart';
-import 'package:mini_app/Auth/leaderboard_controller.dart';
+import 'package:mini_app/Auth/repository.dart';
 import 'package:mini_app/wolf_game.dart';
 
 class MainMenu extends StatelessWidget {
@@ -16,7 +16,6 @@ class MainMenu extends StatelessWidget {
     // const blackTextColor = Color.fromRGBO(0, 0, 0, 1.0);
     const whiteTextColor = Color.fromRGBO(255, 255, 255, 1.0);
     authController.loadUser();
-    print(authController.status);
     return Material(
       color: Colors.black,
       child: Scaffold(
@@ -48,7 +47,6 @@ class MainMenu extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-
                       onPressed: () async {
                         if (authController.status == AuthStatus.authenticated) {
                           game.overlays.remove('MainMenu');
@@ -75,17 +73,14 @@ class MainMenu extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-
                       onPressed: () async {
+                        game.overlays.add('Leaderboard');
                         try {
-                          final leaderboard = await fetchScoreboard();
-                          await LeaderboardModal(context, leaderboard);
-                          // ignore: use_build_context_synchronouslyR
-                          // await LeaderboardModal(context, leaderboard);
+                          // final leaderboard = await fetchScoreboard();
+                          // await leaderboardModal(context, leaderboard);
                         } catch (e) {
                           print(e);
                         }
-
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF292A3B),
@@ -107,7 +102,11 @@ class MainMenu extends StatelessWidget {
                     if (authController.status != AuthStatus.authenticated)
                       ElevatedButton(
                         onPressed: () async {
-                          authController.logout();
+                          // authController.logout();
+                          try {
+                            await chargeGame();
+                            _showSnackbar(context);
+                          } catch (e) {}
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFF292A3B),
@@ -185,92 +184,21 @@ class MainMenu extends StatelessWidget {
     );
   }
 
-  Future<void> LeaderboardModal(context, leaderboard) async {
-    const whiteTextColor = Color.fromRGBO(255, 255, 255, 1.0);
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-            contentPadding: EdgeInsets.all(0), // Remove padding
-            content: Stack(
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.only(top: 70, bottom: 10),
-                  width: 500,
-                  height: double.infinity,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(
-                          'assets/images/leaderboard_back.jpg'), // Replace with your image path
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Container(
-                    margin: const EdgeInsets.only(top: 10),
-                    child: ListView.builder(
-                      itemCount: leaderboard.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          // width: 100,
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1, color: Colors.black),
-                              borderRadius: BorderRadius.circular(10)),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 10),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 80, vertical: 7),
-                          // width: 200,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                '${index + 1}. ${leaderboard[index]!.data![index]!.playerName}',
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                              Text(
-                                '${leaderboard[index]!.data![index]!.score}',
-                                style: const TextStyle(fontSize: 20),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        const Text(
-                          'RANK',
-                          style: TextStyle(
-                            fontSize: 30.0,
-                            color: whiteTextColor,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.close),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ));
-      },
+  void _showSnackbar(BuildContext context) {
+    final snackBar = SnackBar(
+      padding: EdgeInsets.all(0),
+      content: Container(
+        height: 100, // Set the desired height
+        width: double.infinity, // Full width
+        color: Colors.green, // Green background color
+        alignment: Alignment.center,
+        child: const Text(
+          'Successfully Charged',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      behavior: SnackBarBehavior.fixed, // Display at the top
     );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
