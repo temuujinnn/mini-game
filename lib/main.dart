@@ -1,6 +1,7 @@
 import 'package:flame/game.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
+import 'package:mini_app/component/leaderboard.dart';
 
 import 'dead_menu.dart';
 import 'main_menu.dart';
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
       overlayBuilderMap: {
         'MainMenu': (_, WolfGame game) => MainMenu(game: game),
         'GameOver': (_, WolfGame game) => GameOver(game: game),
+        'Leaderboard': (_, WolfGame game) => LeaderBoard(game: game),
       },
       initialActiveOverlays: const ['MainMenu'],
       loadingBuilder: (_) => const Center(
