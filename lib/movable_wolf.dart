@@ -7,6 +7,7 @@ import 'package:mini_app/game_map.dart';
 import 'package:mini_app/sheep.dart';
 import 'commons/ember.dart';
 
+import 'malchin.dart';
 import 'wolf_game.dart';
 
 enum PlayerState { crashed, jumping, running, waiting }
@@ -108,7 +109,8 @@ class MovableWolf extends Ember<WolfGame>
         ),
       );
 
-      game.score = game.score + 100;
+      game.score = game.score + 1;
+      game.health = 200;
       other.add(TextComponent(
         text: '100',
         textRenderer: textRenderer,
@@ -117,6 +119,10 @@ class MovableWolf extends Ember<WolfGame>
       ));
       await Future.delayed(const Duration(milliseconds: 250));
       other.add(RemoveEffect());
+    }
+    if (other is Malchin) {
+      game.health = game.health - 30;
+      // make it white and red
     }
   }
 
