@@ -76,12 +76,6 @@ class MainMenu extends StatelessWidget {
                     ElevatedButton(
                       onPressed: () async {
                         game.overlays.add('Leaderboard');
-                        try {
-                          // final leaderboard = await fetchScoreboard();
-                          // await leaderboardModal(context, leaderboard);
-                        } catch (e) {
-                          print(e);
-                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF292A3B),
@@ -105,8 +99,9 @@ class MainMenu extends StatelessWidget {
                         onPressed: () async {
                           // authController.logout();
                           try {
-                            await chargeGame();
-                            _showSnackbar(context);
+                            // await chargeGame();
+                            // _showSnackbar(context);
+                            sendScoreData(1001);
                           } catch (e) {}
                         },
                         style: ElevatedButton.styleFrom(
@@ -136,52 +131,113 @@ class MainMenu extends StatelessWidget {
     );
   }
 
-  Future<void> login(context) async {
+  Future<void> login(BuildContext context) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Login'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Text('Please enter your phone number:'),
-              TextFormField(
-                controller: phoneNumberController,
-                keyboardType: TextInputType.phone,
-                decoration: InputDecoration(labelText: 'Phone Number'),
-              ),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () async {
-                final phoneNumber = phoneNumberController.text;
-                if (phoneNumber.isNotEmpty) {
-                  AuthController authController = AuthController();
-                  try {
-                    await authController.loginPhoneNumber(phoneNumber);
-                    Navigator.of(context).pop();
-                    game.overlays.remove('MainMenu');
-                    game.restart();
-                  } catch (e) {
-                    print(e);
-                  }
-
-                  // Navigator.of(context).pop();
-                }
-              },
-              child: Text('Login'),
-            ),
-          ],
+        return Dialog(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          child: contentBox(context),
         );
       },
+    );
+  }
+
+  Widget contentBox(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      width: 400,
+      decoration: BoxDecoration(
+        shape: BoxShape.rectangle,
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text(
+            'Welcome to ARDiin chono',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // SizedBox(height: 20),
+          // Text(
+          //   'Please enter your phone number',
+          //   style: TextStyle(
+          //     fontSize: 16,
+          //   ),
+          //   textAlign: TextAlign.start,
+          // ),
+          TextFormField(
+            controller:
+                phoneNumberController, // Assuming you have a TextEditingController
+            keyboardType: TextInputType.phone,
+            decoration: InputDecoration(
+              labelText: 'Phone Number',
+            ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () async {
+              final phoneNumber = phoneNumberController.text;
+              await authController.loginPhoneNumber(phoneNumber);
+              Navigator.of(context).pop(); // Close the dialog
+              game.overlays.remove('MainMenu');
+              game.restart();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFF292A3B),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'LOGIN'.toUpperCase(),
+                  style: const TextStyle(
+                    fontSize: 30.0,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.end,
+          //   children: <Widget>[
+          //     TextButton(
+          //       onPressed: () {
+          //         Navigator.of(context).pop();
+          //       },
+          //       child: Text('Cancel'),
+          //     ),
+          // TextButton(
+          //   onPressed: () async {
+          //     final phoneNumber = phoneNumberController.text;
+          //     if (phoneNumber.isNotEmpty) {
+          //       AuthController authController = AuthController();
+
+          //       try {
+          //         await authController.loginPhoneNumber(phoneNumber);
+          //         Navigator.of(context).pop(); // Close the dialog
+          //         game.overlays.remove('MainMenu');
+          //         game.restart();
+          //       } catch (e) {
+          //         print(e);
+          //       }
+          //     }
+          //   },
+          //   child: Text('Login'),
+          // ),
+          //   ],
+          // ),
+        ],
+      ),
     );
   }
 

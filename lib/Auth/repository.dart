@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:mini_app/Auth/auth_controller.dart';
 import 'package:mini_app/models/leaderboard_model.dart';
 
 Future<List<LeaderBoardModel>> fetchScoreboard() async {
@@ -59,5 +59,35 @@ Future<void> chargeGame() async {
     }
   } catch (e) {
     print("Error: $e");
+  }
+}
+
+Future<void> sendScoreData(score) async {
+  final url = Uri.parse('http://18.184.93.1:4050/api/scoreboard/');
+  final token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NTJhMjNhZjRmYzA4M2I5M2I4NGJhMzMiLCJwaG9uZU5vIjo5OTExMDA0NSwiaWF0IjoxNjk3MjYxOTU2LCJleHAiOjE2OTc4NjY3NTZ9.P4e7El1213JphGpvx8Bap5BqhMxM01LLUHttpnPyipw';
+
+  final headers = {
+    'accept': 'application/json',
+    'authorization': 'Bearer $token',
+    'Content-Type': 'application/json',
+  };
+
+  final body = jsonEncode({
+    'score': score,
+    'survivalDuration': score,
+  });
+
+  try {
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      print('Success: ${response.body}');
+    } else {
+      print('Error: ${response.statusCode}');
+      print('Response: ${response.body}');
+    }
+  } catch (e) {
+    print('Error: $e');
   }
 }
