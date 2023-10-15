@@ -61,12 +61,16 @@ class WolfGame extends FlameGame
   @override
   Future<void> onLoad() async {
     /// Joystick
-    final knobPaint = BasicPalette.blue.withAlpha(200).paint();
-    final backgroundPaint = BasicPalette.blue.withAlpha(100).paint();
+    final knobPaint = BasicPalette.white.withAlpha(200).paint();
+    final backgroundPaint = BasicPalette.white.withAlpha(100).paint();
     joystick = JoystickComponent(
       knob: CircleComponent(radius: 30, paint: knobPaint),
       background: CircleComponent(radius: 100, paint: backgroundPaint),
-      margin: const EdgeInsets.only(left: 40, bottom: 40),
+      margin: const EdgeInsets.only(left: 50, bottom: 40, right: 40),
+      position:
+
+          /// bottom center of the screen
+          viewportResolution / 2,
     );
 
     scoreText = TextComponent(

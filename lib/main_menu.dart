@@ -9,7 +9,8 @@ class MainMenu extends StatelessWidget {
 
   MainMenu({super.key, required this.game});
   final authController = AuthController();
-  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController phoneNumberController =
+      TextEditingController(text: '99110041');
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +49,6 @@ class MainMenu extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ElevatedButton(
-
                       onPressed: () async {
                         if (authController.status == AuthStatus.authenticated) {
                           game.overlays.remove('MainMenu');
@@ -75,7 +75,6 @@ class MainMenu extends StatelessWidget {
                     ),
                     const SizedBox(height: 20),
                     ElevatedButton(
-
                       onPressed: () async {
                         try {
                           final leaderboard = await fetchScoreboard();
@@ -85,7 +84,6 @@ class MainMenu extends StatelessWidget {
                         } catch (e) {
                           print(e);
                         }
-
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF292A3B),
