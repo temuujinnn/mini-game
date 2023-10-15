@@ -6,6 +6,7 @@ import 'package:flame/palette.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:mini_app/game_map.dart';
+import 'package:mini_app/ger_anim.dart';
 import 'package:mini_app/hud.dart';
 import 'package:mini_app/movable_wolf.dart';
 import 'package:mini_app/sheep.dart';
@@ -136,6 +137,8 @@ class WolfGame extends FlameGame
     world.add(GameMap());
     sheep = List.generate(30, (_) => Sheep(GameMap.generateCoordinates()));
     malchin = List.generate(30, (_) => Malchin(GameMap.generateCoordinates()));
+    world.addAll(
+        List.generate(4, (index) => GerComp(GameMap.generateCoordinates())));
     world.addAll(sheep);
     world.addAll(malchin);
     world.add(player = MovableWolf(joystick));

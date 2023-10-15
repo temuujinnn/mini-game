@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:mini_app/game_map.dart';
 import 'package:mini_app/sheep.dart';
+import 'bullet.dart';
 import 'commons/ember.dart';
 
 import 'malchin.dart';
@@ -105,6 +106,20 @@ class MovableWolf extends Ember<WolfGame>
 
       game.score = game.score + 1;
       game.health = 200;
+      game.world.addAll([
+        Sheep(GameMap.generateCoordinates()),
+        Sheep(GameMap.generateCoordinates()),
+      ]);
+      game.world.addAll([
+        Malchin(GameMap.generateCoordinates()),
+      ]);
+
+      for (var i = 0; i < game.malchin.length; i++) {
+        print('game.malchin.length');
+        print(game.malchin.length);
+        game.malchin[i].shoot();
+      }
+
       other.add(TextComponent(
         text: '100',
         textRenderer: textRenderer,
@@ -122,6 +137,17 @@ class MovableWolf extends Ember<WolfGame>
           PerlinNoiseEffectController(duration: 0.3, frequency: 500),
         ),
       );
+      // make it white and red
+    }
+    if (other is Ball) {
+      game.health = game.health - 10;
+      game.camera.viewfinder.add(
+        MoveEffect.by(
+          Vector2(10, 10),
+          PerlinNoiseEffectController(duration: 0.3, frequency: 500),
+        ),
+      );
+
       // make it white and red
     }
   }

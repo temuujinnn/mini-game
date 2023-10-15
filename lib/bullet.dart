@@ -10,7 +10,7 @@ class Ball extends CircleComponent
   late Vector2 velocity;
 
   Ball() {
-    paint = Paint()..color = Colors.white;
+    paint = Paint()..color = Colors.yellow;
     radius = 10;
   }
 

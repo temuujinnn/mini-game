@@ -6,10 +6,9 @@ import 'package:flame/components.dart';
 import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
-import 'package:mini_app/bullet.dart';
 
-class Malchin extends SpriteAnimationComponent with HasGameRef, TapCallbacks {
-  Malchin(Vector2 position)
+class GerComp extends SpriteAnimationComponent with HasGameRef, TapCallbacks {
+  GerComp(Vector2 position)
       : super(
           position: position,
           size: Vector2.all(50),
@@ -19,13 +18,12 @@ class Malchin extends SpriteAnimationComponent with HasGameRef, TapCallbacks {
 
   @override
   Future<void> onLoad() async {
-    final random = Random().nextInt(2);
     animation = await game.loadSpriteAnimation(
-      random == 1 ? 'animations/malchin2.png' : 'animations/malchin.png',
+      'animations/ger.png',
       SpriteAnimationData.sequenced(
-        amount: 3 + random,
-        textureSize: Vector2(42, 48),
-        stepTime: 0.15,
+        amount: 5,
+        textureSize: Vector2(80, 120),
+        stepTime: 0.3,
       ),
     );
     paint = Paint()..color = Colors.black;
@@ -35,10 +33,7 @@ class Malchin extends SpriteAnimationComponent with HasGameRef, TapCallbacks {
   @override
   void update(double dt) {
     super.update(dt);
-    // shoot every 2000ms
   }
 
-  shoot() {
-    add(Ball());
-  }
+  shoot() {}
 }
