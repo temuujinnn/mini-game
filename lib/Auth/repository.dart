@@ -25,12 +25,12 @@ Future<List<LeaderBoardModel>> fetchScoreboard() async {
   }
 }
 
-Future<void> chargeGame() async {
+Future<void> chargeGame(String number) async {
   final String url = "https://mock.apidog.com/m1/398946-0-default/charge";
 
   // Create the request body
   Map<String, dynamic> requestBody = {
-    "mobileNo": 99111199,
+    "mobileNo": number,
     "txnAmt": 1000,
     "txnCur": "ACO",
     "txnDesc": "Charging Mini game.",

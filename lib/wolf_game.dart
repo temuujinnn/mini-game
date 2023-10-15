@@ -6,8 +6,12 @@ import 'package:flame/palette.dart';
 import 'package:flame/text.dart';
 import 'package:flutter/material.dart' hide Image;
 import 'package:mini_app/game_map.dart';
+import 'package:mini_app/hud.dart';
 import 'package:mini_app/movable_wolf.dart';
 import 'package:mini_app/sheep.dart';
+
+import 'Auth/repository.dart';
+import 'malchin.dart';
 
 enum GameState { playing, intro, gameOver }
 
@@ -36,21 +40,19 @@ class WolfGame extends FlameGame
   final Vector2 viewportResolution;
   late JoystickComponent joystick;
 
-  late final TextComponent scoreText;
-  // late final TextComponent healthText;
-
-  int _health = 100;
-  int get health => _health;
-  set health(int newHealth) {
+  double _health = 100;
+  List<Sheep> sheep = [];
+  List<Malchin> malchin = [];
+  double get health => _health;
+  set health(double newHealth) {
     _health = newHealth;
-    // healthText.text = 'HEALTH: ${scoreString(_health)}';
+    // healthBar.width = _health * 2;
   }
 
   int _score = 0;
   int get score => _score;
   set score(int newScore) {
     _score = newScore;
-    scoreText.text = 'SCORE: ${scoreString(_score)}';
   }
 
   String scoreString(int score) => score.toString().padLeft(5, '0');
@@ -72,19 +74,6 @@ class WolfGame extends FlameGame
           /// bottom center of the screen
           viewportResolution / 2,
     );
-
-    scoreText = TextComponent(
-      textRenderer: TextPaint(
-        style: const TextStyle(
-          color: Colors.white70,
-          fontSize: 30,
-          fontFamily: 'PressStart2P',
-        ),
-      ),
-    );
-    scoreText.text = 'SCORE: 00000';
-
-    add(scoreText);
   }
 
   @override
@@ -95,7 +84,8 @@ class WolfGame extends FlameGame
     }
 
     if (isPlaying) {
-      // health = health - 1;
+      health = health - 0.1;
+      // healthBar.width = health * 2;
       timePlaying += dt;
       _distanceTraveled += dt * currentSpeed;
       // score = _distanceTraveled ~/ 50;
@@ -137,23 +127,25 @@ class WolfGame extends FlameGame
   void gameOver() {
     print('game over');
     state = GameState.gameOver;
-
     player.current = PlayerState.crashed;
-    this.overlays.add('DeadMenu');
+    overlays.add('GameOver');
   }
 
-  void restart() {
+  void restart() async {
+    await chargeGame('99110041');
     world.add(GameMap());
-    world.addAll(
-      List.generate(30, (_) => Sheep(GameMap.generateCoordinates())),
-    );
+    sheep = List.generate(30, (_) => Sheep(GameMap.generateCoordinates()));
+    malchin = List.generate(30, (_) => Malchin(GameMap.generateCoordinates()));
+    world.addAll(sheep);
+    world.addAll(malchin);
     world.add(player = MovableWolf(joystick));
     camera.follow(player, maxSpeed: 300);
     camera.setBounds(GameMap.bounds);
-    camera.viewport.add(scoreText);
     camera.viewport.add(joystick);
     state = GameState.playing;
     player.reset();
+    health = 200;
+    add(Hud());
     currentSpeed = startSpeed;
     timePlaying = 0.0;
     score = 0;
