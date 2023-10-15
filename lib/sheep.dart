@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:flame/collisions.dart';
@@ -6,7 +7,7 @@ import 'package:flame/effects.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
 
-class Sheep extends SpriteComponent with HasGameRef, TapCallbacks {
+class Sheep extends SpriteAnimationComponent with HasGameRef, TapCallbacks {
   Sheep(Vector2 position)
       : super(
           position: position,
@@ -17,16 +18,19 @@ class Sheep extends SpriteComponent with HasGameRef, TapCallbacks {
 
   @override
   Future<void> onLoad() async {
-    sprite = await game.loadSprite('nine-box.png');
-    // animation = await game.loadSpriteAnimation(
-    //   'animations/sheep.png',
-    //   SpriteAnimationData.sequenced(
-    //     amount: 3,
-    //     textureSize: Vector2(47, 51),
-    //     stepTime: 0.15,
-    //   ),
-    // );
-    paint = Paint()..color = Colors.white;
+    final random = Random().nextInt(2);
+
+    print(random);
+
+    animation = await game.loadSpriteAnimation(
+      random == 1 ? 'animations/sheep2.png' : 'animations/sheep1.png',
+      SpriteAnimationData.sequenced(
+        amount: 3,
+        textureSize: Vector2(49, 50),
+        stepTime: 0.15,
+      ),
+    );
+    paint = Paint()..color = Colors.black;
     add(RectangleHitbox());
   }
 

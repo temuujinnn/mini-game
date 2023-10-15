@@ -19,11 +19,22 @@ class MovableWolf extends Ember<WolfGame>
       : super(
           size: Vector2.all(100.0),
         );
-  // MovableEmber() : super(priority: 2);
 
   static const double speed = 300;
   static final TextPaint textRenderer = TextPaint(
-    style: const TextStyle(color: Colors.white70, fontSize: 12),
+    // ignore: prefer_const_constructors
+    style: TextStyle(
+        color: Colors.red,
+        fontSize: 48.0,
+        fontWeight: FontWeight.bold,
+        letterSpacing: 4.0,
+        shadows: const [
+          Shadow(
+            blurRadius: 2,
+            color: Colors.black,
+            offset: Offset(2, 2),
+          ),
+        ]),
   );
   final Vector2 velocity = Vector2.zero();
   late final TextComponent positionText;
@@ -96,6 +107,7 @@ class MovableWolf extends Ember<WolfGame>
           ),
         ),
       );
+
       game.score = game.score + 100;
       other.add(TextComponent(
         text: '100',

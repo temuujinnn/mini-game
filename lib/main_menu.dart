@@ -9,7 +9,8 @@ class MainMenu extends StatelessWidget {
 
   MainMenu({super.key, required this.game});
   final authController = AuthController();
-  final TextEditingController phoneNumberController = TextEditingController();
+  final TextEditingController phoneNumberController =
+      TextEditingController(text: '99110041');
 
   @override
   Widget build(BuildContext context) {
