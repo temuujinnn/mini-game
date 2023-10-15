@@ -44,6 +44,7 @@ class MainMenu extends StatelessWidget {
                   children: [
                     ElevatedButton(
                       onPressed: () {
+                        /// Remove the overlay and start the game.
                         game.overlays.remove('MainMenu');
                         game.restart();
                       },
@@ -66,8 +67,8 @@ class MainMenu extends StatelessWidget {
                     const SizedBox(height: 20),
                     ElevatedButton(
                       onPressed: () {
-                        game.overlays.add('MainMenu');
-                        game.restart();
+                        game.overlays.add('LeaderBoard');
+                        // game.restart();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFF292A3B),

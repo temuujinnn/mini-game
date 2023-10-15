@@ -1,8 +1,5 @@
-import 'dart:ui';
-
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
-import 'package:flame/flame.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flame/palette.dart';
@@ -11,8 +8,6 @@ import 'package:flutter/material.dart' hide Image;
 import 'package:mini_app/game_map.dart';
 import 'package:mini_app/movable_wolf.dart';
 import 'package:mini_app/sheep.dart';
-
-import 'dead_menu.dart';
 
 enum GameState { playing, intro, gameOver }
 
@@ -140,7 +135,7 @@ class WolfGame extends FlameGame
     state = GameState.gameOver;
 
     player.current = PlayerState.crashed;
-    currentSpeed = 0.0;
+    this.overlays.add('DeadMenu');
   }
 
   void restart() {
