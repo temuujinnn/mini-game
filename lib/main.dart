@@ -19,6 +19,7 @@ void main() async {
   // Initialize the AuthController
 
   // Start the application
+
   runApp(
     MaterialApp(
       scaffoldMessengerKey: scaffoldMessengerKey,
