@@ -81,7 +81,9 @@ class AuthController extends GetxController {
   }
 
   Future<void> logout() async {
+    phoneNumber.value = '';
     await AuthService.clearAccessToken();
+    await AuthService.clearPhoneNumber();
     _status = AuthStatus.unauthenticated;
   }
 }
@@ -110,5 +112,10 @@ class AuthService {
   static Future<void> clearAccessToken() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('accessToken');
+  }
+
+  static Future<void> clearPhoneNumber() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('phonoeNumber');
   }
 }
